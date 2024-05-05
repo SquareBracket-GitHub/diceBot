@@ -85,32 +85,32 @@ module.exports = {
             dp: 100,
             d120: 120
         }
-        const diceType = interaction.options._subcommand;
-        let rolls;
-        if (!interaction.options._hoistedOptions[0]) rolls = 1;
+        const diceType = interaction.options._subcommand;          //돌릴 주사위 종류 정하기
+        let rolls; //돌릴 횟수
+        if (!interaction.options._hoistedOptions[0]) rolls = 1;    //몇 번 돌릴지에 대한 값이 없으면 rolls=1
         else rolls = interaction.options._hoistedOptions[0].value;
         
-        let rolledNumber = 0;
+        let rolledNumber = 0;                                      //돌린 주사위 값들의 총합 변수
         let rolledArr = [];
 
-        for (i=0; i<rolls; i++) {
+        for (i=0; i<rolls; i++) {                                  //rolls 값만큼 반복해서 난수 생성
             const randomBytes = crypto.randomBytes(1);
-            const random = (randomBytes[0] % dices[diceType]) + 1;
+            const random = (randomBytes[0] % dices[diceType]) + 1; //crypto로 생성한 난수
             // const random = crypto.randomInt(1, dices[diceType] + 1);
-            rolledArr.push(random);
-            rolledNumber += random;
+            rolledArr.push(random);                                //생성된 난수 rolledArr에 저장
+            rolledNumber += random;                           
         }
 
-        var embedDescription;
+        var embedDescription;                                      //임배드 Description
         if (rolls > 1) {
             var string = '';
-            rolledArr.forEach((num, i) => {
+            rolledArr.forEach((num, i) => {                        //여러번 돌렸을 시의 임배드 Description
                 string += '`' + num + '`';
                 if (i + 1 == rolledArr.length) string += ` = **${rolledNumber}**`;
                 else string += ' + ';
             });
             embedDescription = '>>> ' + string;
-        } else embedDescription = `>>> **${rolledNumber}**`;
+        } else embedDescription = `>>> **${rolledNumber}**`;       //한 번 돌렸을 시의 임배드 Description
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: interaction.user.username + '님의 ' + rollsNumber(rolls) + diceType, iconURL: interaction.user.avatarURL()})
