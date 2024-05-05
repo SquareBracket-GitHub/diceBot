@@ -26,11 +26,11 @@ for (let i=0; i<dices.dp; i++) {
 result.total = 0;
 result.rollCount = 0;
 
-for (let i=0; i<1000000; i++) {
+for (let i=0; i<100000; i++) {
     var dice = generateRandomInt();
-    result[dice]++;
-    result.total += dice;
-    result.rollCount++;
+    result[dice]++; //한 번호가 몇 번 나왔는지 확인
+    result.total += dice; //나온 숫자들 총합
+    result.rollCount++; //주사위 굴린 횟수
     console.log(dice);
 }
 
