@@ -115,7 +115,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setAuthor({ name: interaction.user.username + '님의 ' + rollsNumber(rolls) + diceType, iconURL: interaction.user.avatarURL()})
             .setDescription(embedDescription)
-            .setColor('White');
+            .setColor('#F8F1C8');
         
         await interaction.reply({ content: '타라락.', embeds: [embed] });
         console.log(`${interaction.user.username} rolled the ${rollsNumber(rolls)}${diceType} dice, and the number that came up was ${rolledNumber}.`);

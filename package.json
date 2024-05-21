@@ -3,15 +3,15 @@
     "discord.js": "^14.6.0",
     "nodemon": "^2.0.20"
   },
-  "name": "square_handler",
-  "version": "1.0.0",
+  "name": "dice_bot",
+  "version": "1.0.1",
   "main": "src/bot.js",
   "scripts": {
     "test": "node .",
     "dev": "nodemon .",
     "deployCommands": "node src/deployCommands.js"
   },
-  "author": "Team Pixel Punk",
+  "author": "Square Bracket",
   "license": "ISC",
   "description": ""
 }
