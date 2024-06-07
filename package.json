@@ -10,7 +10,8 @@
   "scripts": {
     "test": "node .",
     "dev": "nodemon .",
-    "deployCommands": "node src/deployCommands.js"
+    "deployCommands": "node src/deployCommands.js",
+    "resetCommands": "node src/resetCommands.js"
   },
   "author": "Square Bracket",
   "license": "ISC",
