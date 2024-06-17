@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const crypto = require("crypto");
 const moment = require("moment");
+const { dice } = require("../functions/rolling.js");
 
 module.exports = {
     /* Create a new SlashCommandBuilder object. */
@@ -127,27 +128,19 @@ module.exports = {
                 if (option.name == options[i].name) options[i].value = option.value;
             });
         };
-        
-        let rolledNumber = 0;                                      //돌린 주사위 값들의 총합 변수
-        let rolledArr = [];
 
-        for (i=0; i<options[1].value; i++) {                                  //rolls 값만큼 반복해서 난수 생성
-            const randomBytes = crypto.randomBytes(1);
-            const random = (randomBytes[0] % dices[options[0].value]) + 1; //crypto로 생성한 난수
-            rolledArr.push(random);                                //생성된 난수 rolledArr에 저장
-            rolledNumber += random;                           
-        }
+        const randomValue = dice(options[0].value, options[1].value);
 
         var embedDescription;                                      //임배드 Description
         if (options[1].value > 1) {
             var string = '';
-            rolledArr.forEach((num, i) => {                        //여러번 돌렸을 시의 임배드 Description
+            randomValue.values.forEach((num, i) => {                        //여러번 돌렸을 시의 임배드 Description
                 string += '`' + num + '`';
-                if (i + 1 == rolledArr.length) string += ` = **${rolledNumber}**`;
+                if (i + 1 == randomValue.values.length) string += ` = **${randomValue.total}**`;
                 else string += ' + ';
             });
             embedDescription = '>>> ' + string;
-        } else embedDescription = `>>> **${rolledNumber}**`;       //한 번 돌렸을 시의 임배드 Description
+        } else embedDescription = `>>> **${randomValue.total}**`;       //한 번 돌렸을 시의 임배드 Description
 
         const embed = new EmbedBuilder()
             .setAuthor({ name: interaction.user.username + '님의 ' + rollsNumber(options[1].value) + options[0].value, iconURL: interaction.user.avatarURL()})
@@ -155,7 +148,7 @@ module.exports = {
             .setColor('#F8F1C8');
         
         await interaction.reply({ content: '타라락.', embeds: [embed], ephemeral: options[2].value });
-        console.log(`[${moment(new Date()).format('YY/MM/DD hh:mm')}] ${interaction.user.username} | ${rollsNumber(options[1].value)}${options[0].value} | ${rolledNumber} | ${options[2].value}`);
+        console.log(`[${moment(new Date()).format('YY/MM/DD hh:mm')}] ${interaction.user.username} | ${rollsNumber(options[1].value)}${options[0].value} | ${randomValue.total} | ${options[2].value}`);
         // ex) Steve rolled the d20 dice, and the number that came up was 12.
     }
 }
