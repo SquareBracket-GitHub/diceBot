@@ -6,8 +6,8 @@ const { dice } = require("../functions/rolling.js");
 module.exports = {
     /* Create a new SlashCommandBuilder object. */
     data: new SlashCommandBuilder()
-        .setName('주사위')
-        .setDescription('주사위를 굴립니다.')
+        .setName('특수주사위')
+        .setDescription('특수주사위를 굴립니다.')
         .addStringOption(option => option
             .setName('type')
             .setDescription('주사위의 종류를 선택합니다.')
@@ -20,6 +20,21 @@ module.exports = {
                 {name: 'dp', value: 'dp'},
                 {name: 'd120', value: 'd120'}
             ])
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('dice')
+            .setDescription('특수한 주사위를 선택합니다.')
+            .addChoices([
+                {name: '적색', value: 'plus'},
+                {name: '청색', value: 'minus'}
+            ])
+            .setRequired(true)
+        )
+        .addNumberOption(option => option
+            .setName('effect-num')
+            .setDescription('효과의 수, 정도를 선택합니다.')
+            .setMinValue(1)
             .setRequired(true)
         )
         .addNumberOption(option => option
@@ -42,7 +57,9 @@ module.exports = {
         const options = [
             {name: 'type', value: null},        //돌릴 주사위
             {name: 'times', value: 1},          //돌릴 횟수
-            {name: 'ephemeral', value: false}
+            {name: 'ephemeral', value: false},
+            {name: 'dice', value: null},
+            {name: 'effect-num', value: null}
         ];
 
         const interactionOptions = interaction.options._hoistedOptions;
@@ -53,26 +70,33 @@ module.exports = {
             });
         };
 
-        const randomValue = dice(options[0].value, options[1].value);
+        const randomValue = dice(options[0].value, options[1].value, options[3].value, options[4].value);
+
+        let sign;
+        let color = '#F8F1C8';
+        let diceColor;
+
+        if (options[3].value == 'plus') { sign = '+'; diceColor = '적색'; color = 'DD2E44' }
+        if (options[3].value == 'minus') { sign = '-'; diceColor = '청색'; color = '54ACEF' }
 
         var embedDescription;                                           //임배드 Description
         if (options[1].value > 1) {
             var string = '';
             randomValue.values.forEach((num, i) => {                    //여러번 돌렸을 시의 임배드 Description
                 string += '`' + num + '`';
-                if (i + 1 == randomValue.values.length) string += ` = **${randomValue.total}**`;
+                if (i + 1 == randomValue.values.length) string += ` = **${randomValue.total}** *${sign} ${options[4].value}* = **${randomValue.effectedTotal}**`;
                 else string += ' + ';
             });
             embedDescription = '>>> ' + string;
-        } else embedDescription = `>>> **${randomValue.total}**`;        //한 번 돌렸을 시의 임배드 Description
+        } else embedDescription = `>>> **${randomValue.total}** *${sign} ${options[4].value}* = **${randomValue.effectedTotal}**`;        //한 번 돌렸을 시의 임배드 Description
 
         const embed = new EmbedBuilder()
-            .setAuthor({ name: interaction.user.username + '님의 ' + rollsNumber(options[1].value) + options[0].value, iconURL: interaction.user.avatarURL()})
+            .setAuthor({ name: interaction.user.username + '님의 ' + diceColor + ' ' + rollsNumber(options[1].value) + options[0].value, iconURL: interaction.user.avatarURL()})
             .setDescription(embedDescription)
-            .setColor('#F8F1C8');
+            .setColor(color);
         
         await interaction.reply({ content: '타라락.', embeds: [embed], ephemeral: options[2].value });
-        console.log(`[${moment(new Date()).format('YY/MM/DD hh:mm')}] ${interaction.user.username} | ${rollsNumber(options[1].value)}${options[0].value} | ${randomValue.total} | ${options[2].value}`);
+        console.log(`[${moment(new Date()).format('YY/MM/DD hh:mm')}] ${interaction.user.username} | ${rollsNumber(options[1].value)}${options[0].value} | ${randomValue.total} | ${options[2].value} | ${options[3].value} | ${options[4].value}`);
         // ex) Steve rolled the d20 dice, and the number that came up was 12.
     }
 }
