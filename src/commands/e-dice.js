@@ -58,7 +58,7 @@ module.exports = {
             {name: 'type', value: null},        //돌릴 주사위
             {name: 'times', value: 1},          //돌릴 횟수
             {name: 'ephemeral', value: false},
-            {name: 'dice', value: null},
+            {name: 'effect', value: null},
             {name: 'effect-num', value: null}
         ];
 
