@@ -23,11 +23,11 @@ module.exports = {
             .setRequired(true)
         )
         .addStringOption(option => option
-            .setName('dice')
-            .setDescription('특수한 주사위를 선택합니다.')
+            .setName('effect')
+            .setDescription('특수 주사위의 효과를 선택합니다.')
             .addChoices([
-                {name: '적색', value: 'plus'},
-                {name: '청색', value: 'minus'}
+                {name: '플러스', value: 'plus'},
+                {name: '마이너스', value: 'minus'}
             ])
             .setRequired(true)
         )
@@ -76,8 +76,8 @@ module.exports = {
         let color = '#F8F1C8';
         let diceColor;
 
-        if (options[3].value == 'plus') { sign = '+'; diceColor = '적색'; color = 'DD2E44' }
-        if (options[3].value == 'minus') { sign = '-'; diceColor = '청색'; color = '54ACEF' }
+        if (options[3].value == 'plus') { sign = '+'; diceColor = '적색의'; color = 'DD2E44' }
+        if (options[3].value == 'minus') { sign = '-'; diceColor = '청색의'; color = '54ACEF' }
 
         var embedDescription;                                           //임배드 Description
         if (options[1].value > 1) {
